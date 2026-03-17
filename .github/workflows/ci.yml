@@ -53,7 +53,7 @@ jobs:
 
       - name: Build (unsigned)
         run: |
-          tsc --build
+          npx tsc --build
           npx electron-builder --publish never --config.mac.identity=null
 
       - name: Upload artifacts

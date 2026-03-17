@@ -23,14 +23,16 @@ function loadStyles(): string {
 }
 
 function createWindow(): BrowserWindow {
+  const bgColor = getBackgroundColor();
   const win = new BrowserWindow({
     width: 1200,
     height: 800,
     minWidth: 800,
     minHeight: 600,
+    show: false,
     titleBarStyle: 'hiddenInset',
     trafficLightPosition: { x: 16, y: 16, },
-    backgroundColor: getBackgroundColor(),
+    backgroundColor: bgColor,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js',),
       contextIsolation: true,
@@ -38,11 +40,16 @@ function createWindow(): BrowserWindow {
     },
   },);
 
-  win.webContents.on('did-finish-load', () => {
+  win.webContents.on('dom-ready', () => {
     const css = loadStyles();
     if (css) {
       win.webContents.insertCSS(css,);
     }
+    win.webContents.insertCSS(`html, body { background-color: ${getBackgroundColor()} !important; }`,);
+  },);
+
+  win.once('ready-to-show', () => {
+    win.show();
   },);
 
   win.loadURL(CHATGPT_URL,);
@@ -72,6 +79,7 @@ app.whenReady().then(() => {
     const bgColor = getBackgroundColor();
     for (const win of BrowserWindow.getAllWindows()) {
       win.setBackgroundColor(bgColor,);
+      win.webContents.insertCSS(`html, body { background-color: ${bgColor} !important; }`,);
     }
   },);
 },);

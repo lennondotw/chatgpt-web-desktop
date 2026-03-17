@@ -1,9 +1,8 @@
 /* ChatGPT Desktop - Custom Styles */
 
 /* Window drag region - sidebar header area */
-[data-host='chatgpt.com'] nav[aria-label='Chat history'] > div:first-child {
+[data-host='chatgpt.com'] #page-header {
   -webkit-app-region: drag;
-  padding-top: 8px;
 }
 
 /* Exclude buttons from drag region */
