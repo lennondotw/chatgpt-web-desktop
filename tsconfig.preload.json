@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "lib": ["ES2022", "DOM"],
+    "strict": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "declaration": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "tsBuildInfoFile": "dist/.tsbuildinfo.preload"
+  },
+  "include": ["src/preload.ts"],
+  "exclude": ["node_modules", "dist", "release"]
+}
