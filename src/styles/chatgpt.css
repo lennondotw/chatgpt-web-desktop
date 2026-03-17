@@ -1,7 +1,7 @@
 /* ChatGPT Desktop - Custom Styles */
 
-/* Window drag region - sidebar header area */
-[data-host='chatgpt.com'] #page-header {
+/* Window drag region - app header area */
+#page-header {
   -webkit-app-region: drag;
 }
 

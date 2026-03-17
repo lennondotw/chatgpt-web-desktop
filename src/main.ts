@@ -45,7 +45,9 @@ function createWindow(): BrowserWindow {
     if (css) {
       win.webContents.insertCSS(css,);
     }
-    win.webContents.insertCSS(`html, body { background-color: ${getBackgroundColor()} !important; }`,);
+    win.webContents.insertCSS(
+      `html, body { background-color: ${getBackgroundColor()} !important; }`,
+    );
   },);
 
   win.once('ready-to-show', () => {
