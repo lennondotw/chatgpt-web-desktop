@@ -24,3 +24,6 @@ Thumbs.db
 
 # Agent logs (never commit)
 .agent/
+
+# Temporary files
+tmp/
