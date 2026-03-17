@@ -55,7 +55,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Import Code Signing Certificate
-        if: env.CSC_LINK != ''
+        if: ${{ secrets.CSC_LINK != '' }}
         env:
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
@@ -68,18 +68,13 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k actions build.keychain
           rm certificate.p12
 
-      - name: Build (with signing)
-        if: ${{ secrets.CSC_LINK != '' }}
-        run: pnpm run build
+      - name: Build
+        run: |
+          tsc --build
+          npx electron-builder --publish never ${{ secrets.CSC_LINK == '' && '--config.mac.identity=null' || '' }}
         env:
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-
-      - name: Build (without signing)
-        if: ${{ secrets.CSC_LINK == '' }}
-        run: |
-          tsc --build
-          npx electron-builder --publish never --config.mac.identity=null
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
