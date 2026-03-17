@@ -1,8 +1,12 @@
-import { app, BrowserWindow, shell, } from 'electron';
+import { app, BrowserWindow, nativeTheme, shell, } from 'electron';
 import { readFileSync, } from 'node:fs';
 import path from 'node:path';
 
 const CHATGPT_URL = 'https://chatgpt.com';
+
+function getBackgroundColor(): `#${string}` {
+  return nativeTheme.shouldUseDarkColors ? '#212121' : '#FFFFFF';
+}
 
 function loadStyles(): string {
   const stylesDir = path.join(__dirname, 'styles',);
@@ -26,6 +30,7 @@ function createWindow(): BrowserWindow {
     minHeight: 600,
     titleBarStyle: 'hiddenInset',
     trafficLightPosition: { x: 16, y: 16, },
+    backgroundColor: getBackgroundColor(),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js',),
       contextIsolation: true,
@@ -60,6 +65,13 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
+    }
+  },);
+
+  nativeTheme.on('updated', () => {
+    const bgColor = getBackgroundColor();
+    for (const win of BrowserWindow.getAllWindows()) {
+      win.setBackgroundColor(bgColor,);
     }
   },);
 },);
