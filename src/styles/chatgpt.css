@@ -1,17 +1,45 @@
 /* ChatGPT Desktop - Custom Styles */
 
-/* Window drag region - app header area */
-#page-header {
-  -webkit-app-region: drag;
-}
-
-/* Exclude buttons from drag region */
-[data-host='chatgpt.com'] nav[aria-label='Chat history'] button,
-[data-host='chatgpt.com'] nav[aria-label='Chat history'] a {
+/* Base: disable drag on body to prevent accidental window drags */
+[data-host='chatgpt.com'] body {
   -webkit-app-region: no-drag;
 }
 
-/* Add padding for traffic lights when sidebar is visible */
-[data-host='chatgpt.com'] nav[aria-label='Chat history'] {
+/* ===== EXPANDED SIDEBAR STATE ===== */
+/* Detected via: close-sidebar-button aria-expanded="true" */
+
+/* Sidebar header: draggable with top padding for traffic lights */
+[data-host='chatgpt.com']:has(button[data-testid='close-sidebar-button'][aria-expanded='true']) #sidebar-header {
+  -webkit-app-region: drag;
   padding-top: 28px;
+}
+
+/* ===== COLLAPSED SIDEBAR STATE ===== */
+/* Detected via: close-sidebar-button aria-expanded="false" */
+
+/* Tiny bar: add top padding for traffic lights clearance */
+[data-host='chatgpt.com']:has(button[data-testid='close-sidebar-button'][aria-expanded='false'])
+  #stage-sidebar-tiny-bar {
+  padding-top: 36px;
+}
+
+/* Page header: draggable when sidebar is collapsed */
+[data-host='chatgpt.com']:has(button[data-testid='close-sidebar-button'][aria-expanded='false']) #page-header {
+  -webkit-app-region: drag;
+}
+
+/* Model selector parent: add left padding to avoid traffic lights overlap */
+[data-host='chatgpt.com']:has(button[data-testid='close-sidebar-button'][aria-expanded='false'])
+  div:has(> button[data-testid='model-switcher-dropdown-button']) {
+  padding-left: 32px;
+}
+
+/* ===== INTERACTIVE ELEMENTS ===== */
+
+/* Exclude all interactive elements from drag region */
+[data-host='chatgpt.com'] button,
+[data-host='chatgpt.com'] a,
+[data-host='chatgpt.com'] input,
+[data-host='chatgpt.com'] textarea {
+  -webkit-app-region: no-drag;
 }

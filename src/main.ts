@@ -1,15 +1,19 @@
 import { app, BrowserWindow, nativeTheme, shell, } from 'electron';
+import chokidar from 'chokidar';
 import { readFileSync, } from 'node:fs';
 import path from 'node:path';
 
 const CHATGPT_URL = 'https://chatgpt.com';
+const STYLE_ID = 'chatgpt-desktop-styles';
 
 function getBackgroundColor(): `#${string}` {
   return nativeTheme.shouldUseDarkColors ? '#212121' : '#FFFFFF';
 }
 
 function loadStyles(): string {
-  const stylesDir = path.join(__dirname, 'styles',);
+  const stylesDir = app.isPackaged
+    ? path.join(__dirname, 'styles')
+    : path.join(__dirname, '../src/styles');
   const files = ['chatgpt.css',];
   return files
     .map((file,) => {
@@ -20,6 +24,20 @@ function loadStyles(): string {
       }
     },)
     .join('\n',);
+}
+
+function injectCSS(win: BrowserWindow, css: string): void {
+  win.webContents.executeJavaScript(`
+    (function() {
+      let style = document.getElementById('${STYLE_ID}');
+      if (!style) {
+        style = document.createElement('style');
+        style.id = '${STYLE_ID}';
+        document.head.appendChild(style);
+      }
+      style.textContent = ${JSON.stringify(css)};
+    })();
+  `);
 }
 
 function createWindow(): BrowserWindow {
@@ -43,7 +61,7 @@ function createWindow(): BrowserWindow {
   win.webContents.on('dom-ready', () => {
     const css = loadStyles();
     if (css) {
-      win.webContents.insertCSS(css,);
+      injectCSS(win, css);
     }
     win.webContents.insertCSS(
       `html, body { background-color: ${getBackgroundColor()} !important; }`,
@@ -53,6 +71,16 @@ function createWindow(): BrowserWindow {
   win.once('ready-to-show', () => {
     win.show();
   },);
+
+  // CSS hot reload in development mode
+  if (!app.isPackaged) {
+    const stylesPath = path.join(__dirname, '../src/styles');
+    chokidar.watch(stylesPath, { ignoreInitial: true, }).on('change', (filePath,) => {
+      const css = loadStyles();
+      injectCSS(win, css);
+      console.log(`[CSS HMR] Reloaded: ${path.basename(filePath)}`);
+    },);
+  }
 
   win.loadURL(CHATGPT_URL,);
 
