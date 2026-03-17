@@ -1,7 +1,22 @@
 import { app, BrowserWindow, shell, } from 'electron';
+import { readFileSync, } from 'node:fs';
 import path from 'node:path';
 
 const CHATGPT_URL = 'https://chatgpt.com';
+
+function loadStyles(): string {
+  const stylesDir = path.join(__dirname, 'styles',);
+  const files = ['chatgpt.css',];
+  return files
+    .map((file,) => {
+      try {
+        return readFileSync(path.join(stylesDir, file,), 'utf-8',);
+      } catch {
+        return '';
+      }
+    },)
+    .join('\n',);
+}
 
 function createWindow(): BrowserWindow {
   const win = new BrowserWindow({
@@ -16,6 +31,13 @@ function createWindow(): BrowserWindow {
       contextIsolation: true,
       nodeIntegration: false,
     },
+  },);
+
+  win.webContents.on('did-finish-load', () => {
+    const css = loadStyles();
+    if (css) {
+      win.webContents.insertCSS(css,);
+    }
   },);
 
   win.loadURL(CHATGPT_URL,);

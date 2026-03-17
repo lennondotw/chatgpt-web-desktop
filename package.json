@@ -7,26 +7,38 @@
   "license": "MIT",
   "scripts": {
     "dev": "electron .",
-    "build": "tsc --build && electron-builder --publish never",
+    "build": "tsc --build && cp -r src/styles dist/ && electron-builder --publish never",
+    "build:script": "bun run scripts/build.ts",
+    "release": "bun run scripts/release.ts",
+    "release:skip-notarize": "bun run scripts/release.ts --skip-notarize",
+    "notarize": "bun run scripts/notarize.ts",
+    "notarize:setup": "bun run scripts/notarize.ts --setup",
+    "verify": "bun run scripts/verify.ts",
     "typecheck": "tsc --build --dry",
     "lint": "oxlint .",
     "format": "dprint fmt",
     "format:check": "dprint check"
   },
   "devDependencies": {
+    "@types/bun": "^1.3.10",
     "@types/node": "^25.5.0",
     "dprint": "latest",
     "electron": "latest",
     "electron-builder": "latest",
     "oxlint": "latest",
-    "typescript": "latest"
+    "typescript": "latest",
+    "zx": "^8.8.5"
   },
   "build": {
     "appId": "com.lennondotw.chatgpt-web-desktop",
     "productName": "ChatGPT",
     "mac": {
       "category": "public.app-category.productivity",
-      "target": ["dmg", "zip"],
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "identity": "Mingxuan Wang (NAP6NNQHV6)",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",

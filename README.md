@@ -19,8 +19,30 @@ pnpm install
 # Run in development mode
 pnpm run dev
 
-# Build DMG
+# Build DMG (simple)
 pnpm run build
+
+# Build with scripts (verbose)
+pnpm run build:script
+```
+
+## Release (Local)
+
+```bash
+# One-time setup: store notarization credentials in keychain
+pnpm run notarize:setup
+
+# Full release: build + sign + notarize
+pnpm run release
+
+# Release without notarization (for testing)
+pnpm run release:skip-notarize
+
+# Verify signature and Gatekeeper status
+pnpm run verify
+
+# Notarize existing build
+pnpm run notarize
 ```
 
 ## CI/CD Code Signing Setup

@@ -1,0 +1,18 @@
+/* ChatGPT Desktop - Custom Styles */
+
+/* Window drag region - sidebar header area */
+[data-host='chatgpt.com'] nav[aria-label='Chat history'] > div:first-child {
+  -webkit-app-region: drag;
+  padding-top: 8px;
+}
+
+/* Exclude buttons from drag region */
+[data-host='chatgpt.com'] nav[aria-label='Chat history'] button,
+[data-host='chatgpt.com'] nav[aria-label='Chat history'] a {
+  -webkit-app-region: no-drag;
+}
+
+/* Add padding for traffic lights when sidebar is visible */
+[data-host='chatgpt.com'] nav[aria-label='Chat history'] {
+  padding-top: 28px;
+}
